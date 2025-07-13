@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Dashboard from "./pages/Dashboard";
 import FindTailor from "./pages/FindTailor";
+import TailorProfile from "./pages/TailorProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/find-tailor" element={<FindTailor />} />
+            <Route path="/tailor/:id" element={<TailorProfile />} />
             <Route path="/orders" element={<div className="p-8 text-center">Orders page coming soon...</div>} />
             <Route path="/messages" element={<div className="p-8 text-center">Messages page coming soon...</div>} />
             <Route path="/profile" element={<div className="p-8 text-center">Profile page coming soon...</div>} />

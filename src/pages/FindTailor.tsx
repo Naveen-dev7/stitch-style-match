@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, MapPin, Star, Filter, Heart, MessageCircle } from "lucide-react";
 
 const FindTailor = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -179,7 +181,10 @@ const FindTailor = () => {
                   </div>
                   
                   <div className="flex gap-2">
-                    <Button className="flex-1">
+                    <Button 
+                      className="flex-1"
+                      onClick={() => navigate(`/tailor/${tailor.id}`)}
+                    >
                       View Profile
                     </Button>
                     <Button variant="outline">
