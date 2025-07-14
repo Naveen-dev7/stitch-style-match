@@ -126,11 +126,11 @@ const Dashboard = () => {
             <Search className="h-6 w-6 mb-2" />
             Find Tailors
           </Button>
-          <Button variant="outline" className="h-20 flex-col">
+          <Button variant="outline" className="h-20 flex-col" onClick={() => navigate('/orders')}>
             <Package className="h-6 w-6 mb-2" />
             Track Orders
           </Button>
-          <Button variant="outline" className="h-20 flex-col">
+          <Button variant="outline" className="h-20 flex-col" onClick={() => navigate('/messages')}>
             <MessageCircle className="h-6 w-6 mb-2" />
             Messages
           </Button>

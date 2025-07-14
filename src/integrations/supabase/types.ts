@@ -14,7 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          actual_completion: string | null
+          created_at: string
+          description: string | null
+          estimated_completion: string | null
+          id: string
+          item_type: string
+          measurements: Json | null
+          price_quoted: number | null
+          special_instructions: string | null
+          status: string
+          tailor_id: number
+          tailor_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_completion?: string | null
+          created_at?: string
+          description?: string | null
+          estimated_completion?: string | null
+          id?: string
+          item_type: string
+          measurements?: Json | null
+          price_quoted?: number | null
+          special_instructions?: string | null
+          status?: string
+          tailor_id: number
+          tailor_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_completion?: string | null
+          created_at?: string
+          description?: string | null
+          estimated_completion?: string | null
+          id?: string
+          item_type?: string
+          measurements?: Json | null
+          price_quoted?: number | null
+          special_instructions?: string | null
+          status?: string
+          tailor_id?: number
+          tailor_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          pincode: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          pincode?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          pincode?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

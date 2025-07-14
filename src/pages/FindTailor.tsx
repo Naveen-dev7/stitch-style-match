@@ -187,7 +187,10 @@ const FindTailor = () => {
                     >
                       View Profile
                     </Button>
-                    <Button variant="outline">
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigate(`/messages?tailor=${tailor.id}`)}
+                    >
                       <MessageCircle className="h-4 w-4 mr-2" />
                       Chat
                     </Button>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   Home, 
   Search, 
@@ -15,6 +17,7 @@ import {
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
 
   const navItems = [
     { to: "/", icon: Home, label: "Home" },
@@ -70,9 +73,19 @@ const Navigation = () => {
           <Button variant="ghost" size="sm">
             <Bell className="h-4 w-4" />
           </Button>
-          <Button variant="default" size="sm">
-            Login
-          </Button>
+          {user ? (
+            <NavLink to="/profile">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback>
+                  {user.email?.charAt(0)?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </NavLink>
+          ) : (
+            <Button variant="default" size="sm" onClick={() => window.location.href = '/auth'}>
+              Login
+            </Button>
+          )}
         </div>
       </nav>
 
@@ -99,15 +112,35 @@ const Navigation = () => {
             <SheetContent side="right" className="w-64">
               <div className="flex flex-col gap-4 mt-8">
                 <div className="flex items-center gap-3 pb-4 border-b">
-                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Guest User</div>
-                    <Button variant="link" className="h-auto p-0 text-sm text-muted-foreground">
-                      Login / Register
-                    </Button>
-                  </div>
+                  {user ? (
+                    <>
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback>
+                          {user.email?.charAt(0)?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{user.email}</div>
+                        <div className="text-sm text-muted-foreground">Welcome back!</div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                        <User className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-medium">Guest User</div>
+                        <Button 
+                          variant="link" 
+                          className="h-auto p-0 text-sm text-muted-foreground"
+                          onClick={() => window.location.href = '/auth'}
+                        >
+                          Login / Register
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
                 
                 {navItems.map((item) => (
