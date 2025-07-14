@@ -4,10 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   ArrowLeft, MapPin, Star, Calendar, Clock, 
   MessageCircle, Heart, Share, Verified,
-  IndianRupee, Award, Users
+  IndianRupee, Award, Users, Send
 } from "lucide-react";
 
 const TailorProfile = () => {
@@ -128,10 +130,29 @@ const TailorProfile = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button className="bg-white text-primary hover:bg-white/90">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Chat Now
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="bg-white text-primary hover:bg-white/90">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Chat Now
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Chat with {tailor.name}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="bg-muted p-3 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-2">Send a message to discuss your requirements:</p>
+                      </div>
+                      <Textarea placeholder="Hi, I'm interested in your services. Could you help me with..." />
+                      <Button className="w-full">
+                        <Send className="h-4 w-4 mr-2" />
+                        Send Message
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
                 <Button variant="outline" className="border-white/20 text-primary-foreground hover:bg-white/10">
                   <Heart className="h-4 w-4 mr-2" />
                   Save

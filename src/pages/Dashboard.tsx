@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Star, Users, Package, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  
   const recentOrders = [
     { id: "ORD-001", tailor: "Meera Designs", status: "In Progress", item: "Saree Blouse" },
     { id: "ORD-002", tailor: "Crafted Couture", status: "Delivered", item: "Lehenga" },
@@ -25,7 +28,7 @@ const Dashboard = () => {
           <p className="text-xl mb-8 opacity-90">
             Connect with skilled tailors across India for custom clothing that fits perfectly
           </p>
-          <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
+          <Button size="lg" variant="secondary" className="text-lg px-8 py-3" onClick={() => navigate('/find-tailor')}>
             <Search className="mr-2 h-5 w-5" />
             Find Tailors Near You
           </Button>
@@ -119,7 +122,7 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-3 gap-4">
-          <Button variant="outline" className="h-20 flex-col">
+          <Button variant="outline" className="h-20 flex-col" onClick={() => navigate('/find-tailor')}>
             <Search className="h-6 w-6 mb-2" />
             Find Tailors
           </Button>
