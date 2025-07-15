@@ -104,6 +104,66 @@ export type Database = {
         }
         Relationships: []
       }
+      tailors: {
+        Row: {
+          admin_notes: string | null
+          business_name: string
+          certifications: string[] | null
+          city: string
+          created_at: string
+          experience_years: number
+          id: string
+          phone: string
+          pincode: string
+          portfolio_images: string[] | null
+          pricing_range: string
+          shop_address: string
+          specializations: string[]
+          status: string
+          updated_at: string
+          user_id: string
+          working_hours: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          business_name: string
+          certifications?: string[] | null
+          city: string
+          created_at?: string
+          experience_years: number
+          id?: string
+          phone: string
+          pincode: string
+          portfolio_images?: string[] | null
+          pricing_range: string
+          shop_address: string
+          specializations: string[]
+          status?: string
+          updated_at?: string
+          user_id: string
+          working_hours: string
+        }
+        Update: {
+          admin_notes?: string | null
+          business_name?: string
+          certifications?: string[] | null
+          city?: string
+          created_at?: string
+          experience_years?: number
+          id?: string
+          phone?: string
+          pincode?: string
+          portfolio_images?: string[] | null
+          pricing_range?: string
+          shop_address?: string
+          specializations?: string[]
+          status?: string
+          updated_at?: string
+          user_id?: string
+          working_hours?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
