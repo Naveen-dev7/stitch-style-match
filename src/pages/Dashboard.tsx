@@ -78,7 +78,11 @@ const Dashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {recentOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div 
+                    key={order.id} 
+                    className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => navigate(`/order/${order.id}`)}
+                  >
                     <div>
                       <div className="font-medium">{order.item}</div>
                       <div className="text-sm text-muted-foreground">{order.tailor}</div>
@@ -100,8 +104,12 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {featuredTailors.map((tailor) => (
-                  <div key={tailor.name} className="flex items-center justify-between p-3 border rounded-lg">
+                {featuredTailors.map((tailor, index) => (
+                  <div 
+                    key={tailor.name} 
+                    className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => navigate(`/tailor/${index + 1}`)}
+                  >
                     <div>
                       <div className="font-medium">{tailor.name}</div>
                       <div className="text-sm text-muted-foreground flex items-center">

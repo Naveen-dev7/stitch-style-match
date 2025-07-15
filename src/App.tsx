@@ -12,6 +12,8 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
+import Messages from "./pages/Messages";
+import OrderDetails from "./pages/OrderDetails";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +31,8 @@ const App = () => (
               <Route path="/find-tailor" element={<FindTailor />} />
               <Route path="/tailor/:id" element={<TailorProfile />} />
               <Route path="/orders" element={<Orders />} />
-              <Route path="/messages" element={<div className="p-8 text-center">Messages page coming soon...</div>} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/order/:id" element={<OrderDetails />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/help" element={<div className="p-8 text-center">Help page coming soon...</div>} />
