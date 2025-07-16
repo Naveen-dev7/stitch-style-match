@@ -151,26 +151,31 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      // First create the user account
-      const { error: authError } = await signUp(
-        tailorForm.email, 
-        tailorForm.password, 
-        tailorForm.fullName
-      );
+      // Create user account with tailor metadata to prevent profile creation
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: tailorForm.email,
+        password: tailorForm.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: tailorForm.fullName,
+            user_type: 'tailor' // This prevents profile creation
+          }
+        }
+      });
       
       if (authError) {
         throw authError;
       }
 
-      // Get the user session
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Create tailor profile
+      // If user was created successfully, create tailor entry
+      if (data.user) {
         const { error: tailorError } = await supabase
           .from('tailors')
           .insert({
-            user_id: user.id,
+            user_id: data.user.id,
             business_name: tailorForm.businessName,
             experience_years: parseInt(tailorForm.experienceYears),
             specializations: tailorForm.specializations,
@@ -184,6 +189,7 @@ const Auth = () => {
           });
 
         if (tailorError) {
+          console.error('Tailor profile creation error:', tailorError);
           throw tailorError;
         }
 
@@ -191,7 +197,7 @@ const Auth = () => {
         setSignupSuccess(true);
         toast({
           title: "Application Submitted!",
-          description: "Your tailor application has been submitted for review. Please check your email and wait for admin approval.",
+          description: "Your tailor application has been submitted for review. Please check your email to verify your account.",
         });
         
         // Reset form
@@ -212,6 +218,7 @@ const Auth = () => {
         });
       }
     } catch (error: any) {
+      console.error('Tailor signup error:', error);
       toast({
         title: "Application Failed",
         description: error.message || "An error occurred during tailor signup",
