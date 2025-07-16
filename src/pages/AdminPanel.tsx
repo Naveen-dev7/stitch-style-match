@@ -46,12 +46,7 @@ const AdminPanel = () => {
     try {
       const { data, error } = await supabase
         .from('tailors')
-        .select(`
-          *,
-          profiles (
-            full_name
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

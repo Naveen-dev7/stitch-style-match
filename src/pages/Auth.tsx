@@ -10,13 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, ArrowLeft, X } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, X, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [signupForm, setSignupForm] = useState({ email: '', password: '', fullName: '', confirmPassword: '' });
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState('');
   const [tailorForm, setTailorForm] = useState({
     email: '',
     password: '',
@@ -109,6 +111,8 @@ const Auth = () => {
           variant: "destructive"
         });
       } else {
+        setSignupEmail(signupForm.email);
+        setSignupSuccess(true);
         toast({
           title: "Account Created!",
           description: "Please check your email to verify your account."
@@ -183,6 +187,8 @@ const Auth = () => {
           throw tailorError;
         }
 
+        setSignupEmail(tailorForm.email);
+        setSignupSuccess(true);
         toast({
           title: "Application Submitted!",
           description: "Your tailor application has been submitted for review. Please check your email and wait for admin approval.",
@@ -232,6 +238,41 @@ const Auth = () => {
       specializations: prev.specializations.filter(s => s !== spec)
     }));
   };
+
+  // Show signup success message
+  if (signupSuccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Card>
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-2xl font-bold">Check Your Email</CardTitle>
+              <CardDescription>
+                We've sent a verification link to <strong>{signupEmail}</strong>. 
+                Please check your email and click the verification link to complete your registration.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-4">
+                  After verifying your email, you can login to your account.
+                </p>
+                <Button onClick={() => {
+                  setSignupSuccess(false);
+                  setSignupEmail('');
+                }} className="w-full">
+                  Back to Login
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center p-4">
