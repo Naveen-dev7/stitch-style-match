@@ -28,6 +28,12 @@ const Navigation = () => {
     { to: "/help", icon: HelpCircle, label: "Help" },
   ];
 
+  // Add admin link for development/admin purposes
+  const adminNavItems = user?.email === 'admin@stitchmatch.com' ? [
+    ...navItems,
+    { to: "/admin", icon: User, label: "Admin Panel" }
+  ] : navItems;
+
   const NavItem = ({ to, icon: Icon, label, mobile = false }: {
     to: string;
     icon: any;
@@ -63,7 +69,7 @@ const Navigation = () => {
           </NavLink>
           
           <div className="flex items-center gap-1">
-            {navItems.map((item) => (
+            {adminNavItems.map((item) => (
               <NavItem key={item.to} {...item} />
             ))}
           </div>
@@ -143,7 +149,7 @@ const Navigation = () => {
                   )}
                 </div>
                 
-                {navItems.map((item) => (
+                {adminNavItems.map((item) => (
                   <NavItem key={item.to} {...item} mobile />
                 ))}
               </div>
@@ -155,7 +161,7 @@ const Navigation = () => {
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-40">
         <div className="flex items-center justify-around py-2">
-          {navItems.slice(0, 5).map((item) => (
+          {adminNavItems.slice(0, 5).map((item) => (
             <NavLink
               key={item.to}
               to={item.to}

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,50 +9,59 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, MapPin, Star, Filter, Heart, MessageCircle } from "lucide-react";
 
+interface Tailor {
+  id: string;
+  business_name: string;
+  city: string;
+  pincode: string;
+  phone: string;
+  specializations: string[];
+  pricing_range: string;
+  working_hours: string;
+  shop_address: string;
+  experience_years: number;
+  profiles?: {
+    full_name: string;
+  };
+}
+
 const FindTailor = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [tailors, setTailors] = useState<Tailor[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const tailors = [
-    {
-      id: 1,
-      name: "Meera's Traditional Designs",
-      location: "Bandra, Mumbai",
-      rating: 4.9,
-      reviews: 127,
-      specialties: ["Sarees", "Lehengas", "Blouses"],
-      priceRange: "₹500-2000",
-      turnaround: "3-5 days",
-      image: "/placeholder.svg",
-      verified: true
-    },
-    {
-      id: 2,
-      name: "Modern Threads Studio",
-      location: "CP, New Delhi", 
-      rating: 4.7,
-      reviews: 89,
-      specialties: ["Western Wear", "Formal", "Casual"],
-      priceRange: "₹800-3000",
-      turnaround: "2-4 days",
-      image: "/placeholder.svg",
-      verified: true
-    },
-    {
-      id: 3,
-      name: "Artisan Couture",
-      location: "Koramangala, Bangalore",
-      rating: 4.8,
-      reviews: 156,
-      specialties: ["Designer Wear", "Wedding", "Embroidery"],
-      priceRange: "₹1000-5000",
-      turnaround: "5-7 days",
-      image: "/placeholder.svg",
-      verified: true
+  useEffect(() => {
+    fetchApprovedTailors();
+  }, []);
+
+  const fetchApprovedTailors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('tailors')
+        .select(`
+          *,
+          profiles (
+            full_name
+          )
+        `)
+        .eq('status', 'approved');
+
+      if (error) throw error;
+      setTailors(data as any || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch tailors",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const cities = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Hyderabad", "Pune", "Kolkata"];
   const categories = ["Traditional Wear", "Western Wear", "Formal Wear", "Wedding Wear", "Designer Wear"];
@@ -104,10 +115,16 @@ const FindTailor = () => {
 
       {/* Results */}
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold">
-            {tailors.length} Tailors Found
-          </h2>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="text-lg">Loading tailors...</div>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold">
+                {tailors.length} Tailors Found
+              </h2>
           <Select defaultValue="rating">
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Sort by" />
@@ -122,84 +139,87 @@ const FindTailor = () => {
           </Select>
         </div>
 
-        <div className="grid gap-6">
-          {tailors.map((tailor) => (
-            <Card key={tailor.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="md:flex">
-                <div className="md:w-48 h-48 bg-muted">
-                  <img 
-                    src={tailor.image} 
-                    alt={tailor.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="flex-1 p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-xl font-semibold">{tailor.name}</h3>
-                        {tailor.verified && (
-                          <Badge variant="secondary" className="text-xs">Verified</Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center text-muted-foreground mb-2">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {tailor.location}
-                      </div>
-                      <div className="flex items-center gap-1 mb-3">
-                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                        <span className="font-medium">{tailor.rating}</span>
-                        <span className="text-muted-foreground">({tailor.reviews} reviews)</span>
+            <div className="grid gap-6">
+              {tailors.map((tailor) => (
+                <Card key={tailor.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="md:flex">
+                    <div className="md:w-48 h-48 bg-muted flex items-center justify-center">
+                      <div className="text-4xl font-bold text-muted-foreground">
+                        {tailor.business_name.charAt(0)}
                       </div>
                     </div>
                     
-                    <Button variant="ghost" size="icon">
-                      <Heart className="h-5 w-5" />
-                    </Button>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">Specialties</div>
-                      <div className="flex flex-wrap gap-1">
-                        {tailor.specialties.map((specialty) => (
-                          <Badge key={specialty} variant="outline" className="text-xs">
-                            {specialty}
-                          </Badge>
-                        ))}
+                    <div className="flex-1 p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-xl font-semibold">{tailor.business_name}</h3>
+                            <Badge variant="secondary" className="text-xs">Verified</Badge>
+                          </div>
+                          <div className="flex items-center text-muted-foreground mb-2">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            {tailor.city}, {tailor.pincode}
+                          </div>
+                          <div className="text-sm text-muted-foreground mb-3">
+                            Owner: {tailor.profiles?.full_name || 'N/A'}
+                          </div>
+                        </div>
+                        
+                        <Button variant="ghost" size="icon">
+                          <Heart className="h-5 w-5" />
+                        </Button>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-1">Specialties</div>
+                          <div className="flex flex-wrap gap-1">
+                            {tailor.specializations.map((specialty, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {specialty}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-1">Price Range</div>
+                          <div className="font-medium">{tailor.pricing_range}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-1">Experience</div>
+                          <div className="font-medium">{tailor.experience_years} years</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button 
+                          className="flex-1"
+                          onClick={() => navigate(`/tailor/${tailor.id}`)}
+                        >
+                          View Profile
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          onClick={() => navigate(`/messages?tailor=${tailor.id}`)}
+                        >
+                          <MessageCircle className="h-4 w-4 mr-2" />
+                          Chat
+                        </Button>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">Price Range</div>
-                      <div className="font-medium">{tailor.priceRange}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">Turnaround</div>
-                      <div className="font-medium">{tailor.turnaround}</div>
-                    </div>
                   </div>
-                  
-                  <div className="flex gap-2">
-                    <Button 
-                      className="flex-1"
-                      onClick={() => navigate(`/tailor/${tailor.id}`)}
-                    >
-                      View Profile
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => navigate(`/messages?tailor=${tailor.id}`)}
-                    >
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Chat
-                    </Button>
-                  </div>
-                </div>
+                </Card>
+              ))}
+            </div>
+
+            {tailors.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-lg font-semibold mb-2">No approved tailors found</div>
+                <div className="text-muted-foreground">Please check back later or try different search criteria.</div>
               </div>
-            </Card>
-          ))}
-        </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
