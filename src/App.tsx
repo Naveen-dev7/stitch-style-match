@@ -13,6 +13,8 @@ import Auth from "./pages/Auth";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
+import CustomerSignup from "./pages/CustomerSignup";
+import TailorSignup from "./pages/TailorSignup";
 import OrderDetails from "./pages/OrderDetails";
 import Payment from "./pages/Payment";
 import AdminPanel from "./pages/AdminPanel";
@@ -36,6 +38,8 @@ const App = () => (
               <Route path="/messages" element={<Messages />} />
               <Route path="/order/:id" element={<OrderDetails />} />
               <Route path="/payment/:orderId" element={<Payment />} />
+              <Route path="/customer-signup" element={<CustomerSignup />} />
+              <Route path="/tailor-signup" element={<TailorSignup />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/admin" element={<AdminPanel />} />
