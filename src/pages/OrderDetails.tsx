@@ -257,6 +257,15 @@ const OrderDetails = () => {
           >
             Back to Orders
           </Button>
+          {order.status === 'Pending' && (
+            <Button 
+              className="flex-1"
+              onClick={() => navigate(`/payment/${order.id}`)}
+            >
+              <IndianRupee className="h-4 w-4 mr-2" />
+              Pay Now
+            </Button>
+          )}
           {order.status === 'Ready for Pickup' && (
             <Button className="flex-1">
               Mark as Delivered

@@ -216,6 +216,15 @@ const Orders = () => {
                         </div>
                         
                         <div className="flex gap-2">
+                          {order.status === 'pending' && (
+                            <Button 
+                              size="sm"
+                              onClick={() => window.location.href = `/payment/${order.id}`}
+                            >
+                              <IndianRupee className="h-4 w-4 mr-2" />
+                              Pay Now
+                            </Button>
+                          )}
                           <Button 
                             variant="outline" 
                             size="sm"
